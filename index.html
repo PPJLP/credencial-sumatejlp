@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificación de Credencial</title>
+  <style>
+    body {
+      background-color: #5c2a83;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      position: relative;
+      width: 350px;
+      height: 550px;
+      background-color: #5c2a83;
+      background-image: url('ANVERSO.jpeg');
+      background-size: cover;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      overflow: hidden;
+      padding-top: 40px;
+      text-align: center;
+    }
+    .foto {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 4px solid white;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      background-color: white;
+    }
+    .foto img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .info {
+      background: rgba(255,255,255,0.9);
+      margin: 10px auto;
+      border-radius: 20px;
+      color: #5c2a83;
+      font-weight: bold;
+      width: 80%;
+      padding: 10px;
+    }
+    .rol {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="card" id="credencial">
+    <div class="foto"><img id="foto" src="" alt="Foto"></div>
+    <div class="info" id="nombre"></div>
+    <div class="info" id="ci"></div>
+    <div class="rol" id="rol"></div>
+  </div>
+
+  <script>
+    async function cargarDatos() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ciBuscado = urlParams.get('ci');
+      const respuesta = await fetch('data.json');
+      const personas = await respuesta.json();
+      const persona = personas.find(p => p.ci === ciBuscado);
+      if (!persona) {
+        document.getElementById('credencial').innerHTML = '<p style="padding: 40px;">Credencial no encontrada</p>';
+        return;
+      }
+      document.getElementById('nombre').innerText = persona.nombre;
+      document.getElementById('ci').innerText = 'C.I.: ' + persona.ci;
+      document.getElementById('rol').innerText = persona.rol;
+      document.getElementById('foto').src = 'fotos/' + persona.foto;
+    }
+
+    cargarDatos();
+  </script>
+</body>
+</html>
