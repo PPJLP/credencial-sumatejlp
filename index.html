@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credencial JM SUMATE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .credencial-container {
+            position: relative;
+            width: 400px;
+        }
+        .credencial-image {
+            width: 100%;
+            display: block;
+        }
+        .credential-field {
+            position: absolute;
+            background-color: transparent;
+            border: none;
+            color: black;
+            font-family: Arial, sans-serif;
+            padding: 0;
+            margin: 0;
+            text-align: center;
+            transform: translateX(-50%);
+            left: 50%;
+        }
+        #nombreField {
+            top: 290px;
+            font-size: 16px;
+            font-weight: bold;
+            width: 80%;
+        }
+        #ciField {
+            top: 358px;
+            font-size: 14px;
+            width: 40%;
+        }
+        #fotoField {
+            position: absolute;
+            width: 188px;
+            height: 188px;
+            border-radius: 50%;
+            top: 53px;
+            left: 100px;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="credencial-container">
+        <img src="anverso.jpeg" alt="Credencial JM SUMATE" class="credencial-image">
+        <div id="nombreField" class="credential-field"></div>
+        <div id="ciField" class="credential-field"></div>
+        <img id="fotoField" src="" alt="Foto">
+    </div>
+
+    <script>
+        async function cargarCredencial() {
+            const iniciales = new URLSearchParams(window.location.search).get('iniciales');
+            
+            if (!iniciales) return;
+            
+            try {
+                const response = await fetch('personas.json');
+                const personas = await response.json();
+                const persona = personas.find(p => p.iniciales === iniciales);
+                
+                if (persona) {
+                    document.getElementById('nombreField').textContent = persona.nombre;
+                    document.getElementById('ciField').textContent = persona.ci;
+                    document.getElementById('fotoField').src = persona.foto;
+                    document.title = `Credencial - ${persona.nombre}`;
+                }
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', cargarCredencial);
+    </script>
+</body>
+</html>
